@@ -1,14 +1,16 @@
 from flask import Flask
 from .config import Configuration
 from .models import db
-from .routes import orders
+from .routes import orders, session
 # flask login
 from flask_login import LoginManager
 from .models import db, Employee
 
+
 app = Flask(__name__)
 app.config.from_object(Configuration)
 app.register_blueprint(orders.bp)
+app.register_blueprint(session.bp)
 db.init_app(app)
 
 
