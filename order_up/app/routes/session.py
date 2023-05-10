@@ -1,14 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for
 from ..forms import LoginForm
-bp = Blueprint("session", __name__, url_prefix="/session")
 from ..models import Employee
-from flask_login import LoginManager, current_user, login_user
+from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
 
-
+bp = Blueprint("session", __name__, url_prefix="/session")
 
 @bp.route("/")
+@login_required
 def index():
     return "Order Up!"
 
@@ -27,3 +26,8 @@ def login():
         login_user(employee)
         return redirect(url_for("orders.index"))
     return render_template("login.html", form=form)
+
+@bp.route('/logout', methods=["POST"])
+def logout():
+    logout_user()
+    return redirect(url_for('.login'))
